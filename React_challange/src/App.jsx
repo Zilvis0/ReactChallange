@@ -10,6 +10,9 @@ import {
   MenuItem,
   Select,
   Box,
+  Button,
+  Modal,
+  Typography,
 } from "@mui/material";
 
 import "./App.css";
@@ -20,8 +23,25 @@ function App() {
   const [price, setPrice] = useState("");
   const [symbol, setSymbol] = useState("");
   const [stockAmount, setStockAmount] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    maxWidth: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
   const apiUrl =
     "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo";
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   const handleChange = (event) => {
     setStock(event.target.value);
@@ -37,14 +57,10 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         setSymbol(data["Global Quote"]["01. symbol"]);
-        setPrice(data["Global Quote"]["05. price"]);
+        setPrice(parseFloat(data["Global Quote"]["05. price"]).toFixed(2));
       })
       .catch((error) => console.error("Error:", error));
   }, []);
-
-  // useEffect(() => {
-  //   console.log(stockAmount);
-  // }, [stockAmount]);
 
   return (
     <>
@@ -52,7 +68,7 @@ function App() {
         <Container>
           <h1>Stock Order</h1>
         </Container>
-        <Box sx={{ minWidth: 120, p: 2 }}>
+        <Container sx={{ minWidth: 120, p: 2 }}>
           <FormControl fullWidth>
             <InputLabel>Security</InputLabel>
             <Select label="Security" value={stock} onChange={handleChange}>
@@ -63,8 +79,8 @@ function App() {
               )}
             </Select>
           </FormControl>
-        </Box>
-        <Box sx={{ p: 2, gap: 3, display: "flex" }}>
+        </Container>
+        <Container sx={{ p: 2, gap: 3, display: "flex" }}>
           <TextField
             id="outlined-basic"
             label="Shares"
@@ -93,7 +109,7 @@ function App() {
               <FormControlLabel value="stop" control={<Radio />} label="Stop" />
             </RadioGroup>
           </FormControl>
-        </Box>
+        </Container>
         <Container>
           <Paper
             elevation={1}
@@ -105,12 +121,55 @@ function App() {
           >
             <Box>
               <h2>{stock}</h2>
-              <h4>Name</h4>
+              <h4>{stock}</h4>
             </Box>
             <Box>
-              <h2>${parseFloat(price).toFixed(2)}</h2>
+              <h2>${price}</h2>
             </Box>
           </Paper>
+        </Container>
+        <Container
+          sx={{
+            display: stock ? "flex" : "none",
+            flexDirection: "column",
+            py: 2,
+          }}
+        >
+          <Box>Estimated amount</Box>
+          <Box>
+            Buy {stockAmount} x ${price} {stock} = $
+            {(stockAmount * price).toFixed(2)}
+          </Box>
+        </Container>
+        <Container
+          sx={{
+            display: stock ? "flex" : "none",
+            justifyContent: "end",
+            py: 2,
+          }}
+        >
+          <Button
+            onClick={stockAmount ? toggleModal : null}
+            variant={stockAmount ? "contained" : "outlined"}
+          >
+            Buy {stock}
+          </Button>
+          <Modal
+            open={isModalOpen}
+            onClose={toggleModal}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-title" variant="h6" component="h2">
+                Trade Successfull!
+              </Typography>
+              <Typography id="modal-description" sx={{ mt: 2 }}>
+                You have successfully bought {stockAmount} {stock} shares for $
+                {(stockAmount * price).toFixed(2)}
+              </Typography>
+            </Box>
+          </Modal>
         </Container>
       </Container>
     </>
