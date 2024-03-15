@@ -24,6 +24,15 @@ function App() {
   const [symbol, setSymbol] = useState("");
   const [stockAmount, setStockAmount] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const radioOptions = [
+    { value: "market", label: "Market" },
+    { value: "limit", label: "Limit" },
+    { value: "stop", label: "Stop" },
+  ];
+
+  const [selectedRadio, setSelectedRadio] = useState("market");
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -34,6 +43,34 @@ function App() {
     border: "2px solid #000",
     boxShadow: 24,
     p: 4,
+  };
+
+  const radioCommonStyle = {
+    borderRadius: 25,
+    border: "none",
+    color: "white",
+    padding: "5px 15px",
+    textTransform: "none",
+    fontWeight: "bold",
+    "&:hover": {
+      backgroundColor: "#8a6fc7",
+      border: "none",
+    },
+    "&:active": {
+      backgroundColor: "#543c7e",
+      border: "none",
+    },
+  };
+
+  const radioStyleSelected = {
+    ...radioCommonStyle,
+    backgroundColor: "#684fa5",
+  };
+
+  const radioStyleNotSelected = {
+    ...radioCommonStyle,
+    color: "#d1b8ff",
+    backgroundColor: "#241e29",
   };
 
   const apiUrl =
@@ -50,6 +87,10 @@ function App() {
   const handleStockAmountChange = (event) => {
     const sanitizedValue = event.target.value.replace(/[^0-9]/g, "");
     setStockAmount(sanitizedValue);
+  };
+
+  const handleRadioClicked = (event) => {
+    setSelectedRadio(event.target.value);
   };
 
   useEffect(() => {
@@ -80,7 +121,15 @@ function App() {
             </Select>
           </FormControl>
         </Container>
-        <Container sx={{ p: 2, gap: 3, display: "flex" }}>
+        <Container
+          sx={{
+            p: 2,
+            gap: 3,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <TextField
             id="outlined-basic"
             label="Shares"
@@ -95,18 +144,36 @@ function App() {
               aria-labelledby="radio-buttons-group-label"
               defaultValue="market"
               name="radio-buttons-group"
+              onChange={handleRadioClicked}
             >
-              <FormControlLabel
-                value="market"
-                control={<Radio />}
-                label="Market"
-              />
-              <FormControlLabel
-                value="limit"
-                control={<Radio />}
-                label="Limit"
-              />
-              <FormControlLabel value="stop" control={<Radio />} label="Stop" />
+              {radioOptions.map((option) => (
+                <FormControlLabel
+                  sx={{ m: 1 }}
+                  key={option.value}
+                  value={option.value}
+                  control={<Radio sx={{ display: "none" }} />}
+                  label={
+                    <Button
+                      variant={
+                        selectedRadio === option.value
+                          ? "contained"
+                          : "outlined"
+                      }
+                      sx={
+                        selectedRadio === option.value
+                          ? radioStyleSelected
+                          : radioStyleNotSelected
+                      }
+                      color="primary"
+                      onClick={() =>
+                        handleRadioClicked({ target: { value: option.value } })
+                      }
+                    >
+                      {option.label}
+                    </Button>
+                  }
+                />
+              ))}
             </RadioGroup>
           </FormControl>
         </Container>
@@ -137,7 +204,7 @@ function App() {
         >
           <Box>Estimated amount</Box>
           <Box>
-            Buy {stockAmount} x ${price} {stock} = $
+            Buy {stockAmount ? stockAmount : 0} x ${price} {stock} = $
             {(stockAmount * price).toFixed(2)}
           </Box>
         </Container>
@@ -150,7 +217,7 @@ function App() {
         >
           <Button
             onClick={stockAmount ? toggleModal : null}
-            variant={stockAmount ? "contained" : "outlined"}
+            sx={stockAmount ? radioStyleSelected : radioStyleNotSelected}
           >
             Buy {stock}
           </Button>
