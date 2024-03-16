@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Container } from "@mui/material";
+import { Container, createTheme, ThemeProvider } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 
-import "./App.css";
 import SecurityInput from "./components/SecurityInput";
 import SharesInput from "./components/SharesInput";
 import StockInfoDisplay from "./components/StockInfoDisplay";
 import ModalComponent from "./components/ModalComponent";
 import BuyStockButton from "./BuyStockButton";
+
+import "./App.css";
 
 function App() {
   const [stock, setStock] = useState("");
@@ -14,6 +16,22 @@ function App() {
   const [symbol, setSymbol] = useState("");
   const [stockAmount, setStockAmount] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const theme = createTheme({
+    palette: {
+      mode: "light",
+      primary: {
+        main: "#000",
+      },
+      secondary: {
+        main: "#684fa5",
+        light: "#d1b8fe",
+      },
+      background: {
+        default: "#fff",
+      },
+    },
+  });
 
   const apiUrl =
     "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo";
@@ -38,47 +56,50 @@ function App() {
 
   return (
     <>
-      <Container>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Container>
-          <h1>Stock Order</h1>
-        </Container>
-        {symbol && (
-          <SecurityInput
-            stock={stock}
-            handleStockChange={handleStockChange}
-            symbol={symbol}
-          ></SecurityInput>
-        )}
-        <SharesInput
-          stockAmount={stockAmount}
-          setStockAmount={setStockAmount}
-        ></SharesInput>
-        <StockInfoDisplay
-          stock={stock}
-          price={price}
-          stockAmount={stockAmount}
-        ></StockInfoDisplay>
-        <Container
-          sx={{
-            display: stock ? "flex" : "none",
-            justifyContent: "end",
-            py: 2,
-          }}
-        >
-          <BuyStockButton
+          <Container>
+            <h1>Stock Order</h1>
+          </Container>
+          {symbol && (
+            <SecurityInput
+              stock={stock}
+              handleStockChange={handleStockChange}
+              symbol={symbol}
+            ></SecurityInput>
+          )}
+          <SharesInput
             stockAmount={stockAmount}
-            toggleModal={toggleModal}
-            stock={stock}
-          ></BuyStockButton>
-          <ModalComponent
-            stockAmount={stockAmount}
+            setStockAmount={setStockAmount}
+          ></SharesInput>
+          <StockInfoDisplay
             stock={stock}
             price={price}
-            isModalOpen={isModalOpen}
-            toggleModal={toggleModal}
-          ></ModalComponent>
+            stockAmount={stockAmount}
+          ></StockInfoDisplay>
+          <Container
+            sx={{
+              display: stock ? "flex" : "none",
+              justifyContent: "end",
+              py: 2,
+            }}
+          >
+            <BuyStockButton
+              stockAmount={stockAmount}
+              toggleModal={toggleModal}
+              stock={stock}
+            ></BuyStockButton>
+            <ModalComponent
+              stockAmount={stockAmount}
+              stock={stock}
+              price={price}
+              isModalOpen={isModalOpen}
+              toggleModal={toggleModal}
+            ></ModalComponent>
+          </Container>
         </Container>
-      </Container>
+      </ThemeProvider>
     </>
   );
 }

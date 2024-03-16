@@ -1,11 +1,4 @@
-import {
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  Button,
-  createTheme,
-  ThemeProvider,
-} from "@mui/material";
+import { FormControlLabel, Radio, RadioGroup, Button } from "@mui/material";
 import { useState } from "react";
 
 export default function RadioButtonsGroup() {
@@ -20,15 +13,6 @@ export default function RadioButtonsGroup() {
   const handleRadioClicked = (event) => {
     setSelectedRadio(event.target.value);
   };
-
-  const theme = createTheme({
-    palette: {
-      secondary: {
-        main: "#684fa5",
-        light: "#d1b8fe",
-      },
-    },
-  });
 
   return (
     <RadioGroup
@@ -45,24 +29,22 @@ export default function RadioButtonsGroup() {
           value={option.value}
           control={<Radio sx={{ display: "none" }} />}
           label={
-            <ThemeProvider theme={theme}>
-              <Button
-                variant={
-                  selectedRadio === option.value ? "contained" : "outlined"
-                }
-                sx={{
-                  borderRadius: 25,
-                  textTransform: "none",
-                  fontWeight: "bold",
-                }}
-                color="secondary"
-                onClick={() =>
-                  handleRadioClicked({ target: { value: option.value } })
-                }
-              >
-                {option.label}
-              </Button>
-            </ThemeProvider>
+            <Button
+              variant={
+                selectedRadio === option.value ? "contained" : "outlined"
+              }
+              sx={{
+                borderRadius: 25,
+                textTransform: "none",
+                fontWeight: "bold",
+              }}
+              color="secondary"
+              onClick={() =>
+                handleRadioClicked({ target: { value: option.value } })
+              }
+            >
+              {option.label}
+            </Button>
           }
         />
       ))}

@@ -21,6 +21,7 @@ export default function SharesInput({ stockAmount, setStockAmount }) {
         id="outlined-basic"
         label="Shares"
         variant="outlined"
+        sx={{ backgroundColor: "background.default", borderRadius: 1 }}
         value={stockAmount}
         onChange={handleStockAmountChange}
         inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}

@@ -12,6 +12,7 @@ export default function SecurityInput({ stock, symbol, handleStockChange }) {
       <FormControl fullWidth>
         <InputLabel>Security</InputLabel>
         <Select
+          sx={{ backgroundColor: "background.default" }}
           label="Security"
           value={stock}
           onChange={(e) => handleStockChange(e)}
