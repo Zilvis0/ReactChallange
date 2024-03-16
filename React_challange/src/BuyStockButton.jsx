@@ -1,19 +1,6 @@
 import { Button, createTheme, ThemeProvider } from "@mui/material";
-import { deepPurple } from "@mui/material/colors";
 
 export default function BuyStockButton({ stockAmount, toggleModal, stock }) {
-  const buttonStyle = {
-    borderRadius: 25,
-    textTransform: "none",
-    fontWeight: "bold",
-  };
-
-  const buttonDisabledStyle = {
-    borderRadius: 25,
-    textTransform: "none",
-    fontWeight: "bold",
-  };
-
   const theme = createTheme({
     palette: {
       secondary: {
@@ -27,7 +14,7 @@ export default function BuyStockButton({ stockAmount, toggleModal, stock }) {
       <Button
         onClick={stockAmount ? toggleModal : null}
         variant={stockAmount ? "contained" : "outlined"}
-        sx={stockAmount ? buttonStyle : buttonDisabledStyle}
+        sx={{ borderRadius: 25, textTransform: "none", fontWeight: "bold" }}
         color="secondary"
       >
         Buy {stock}

@@ -1,4 +1,11 @@
-import { FormControlLabel, Radio, RadioGroup, Button } from "@mui/material";
+import {
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Button,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
 import { useState } from "react";
 
 export default function RadioButtonsGroup() {
@@ -14,33 +21,14 @@ export default function RadioButtonsGroup() {
     setSelectedRadio(event.target.value);
   };
 
-  const radioCommonStyle = {
-    borderRadius: 25,
-    border: "none",
-    color: "white",
-    padding: "5px 15px",
-    textTransform: "none",
-    fontWeight: "bold",
-    "&:hover": {
-      backgroundColor: "#8a6fc7",
-      border: "none",
+  const theme = createTheme({
+    palette: {
+      secondary: {
+        main: "#684fa5",
+        light: "#d1b8fe",
+      },
     },
-    "&:active": {
-      backgroundColor: "#543c7e",
-      border: "none",
-    },
-  };
-
-  const radioStyleSelected = {
-    ...radioCommonStyle,
-    backgroundColor: "#684fa5",
-  };
-
-  const radioStyleNotSelected = {
-    ...radioCommonStyle,
-    color: "#d1b8ff",
-    backgroundColor: "#241e29",
-  };
+  });
 
   return (
     <RadioGroup
@@ -57,22 +45,24 @@ export default function RadioButtonsGroup() {
           value={option.value}
           control={<Radio sx={{ display: "none" }} />}
           label={
-            <Button
-              variant={
-                selectedRadio === option.value ? "contained" : "outlined"
-              }
-              sx={
-                selectedRadio === option.value
-                  ? radioStyleSelected
-                  : radioStyleNotSelected
-              }
-              color="primary"
-              onClick={() =>
-                handleRadioClicked({ target: { value: option.value } })
-              }
-            >
-              {option.label}
-            </Button>
+            <ThemeProvider theme={theme}>
+              <Button
+                variant={
+                  selectedRadio === option.value ? "contained" : "outlined"
+                }
+                sx={{
+                  borderRadius: 25,
+                  textTransform: "none",
+                  fontWeight: "bold",
+                }}
+                color="secondary"
+                onClick={() =>
+                  handleRadioClicked({ target: { value: option.value } })
+                }
+              >
+                {option.label}
+              </Button>
+            </ThemeProvider>
           }
         />
       ))}
